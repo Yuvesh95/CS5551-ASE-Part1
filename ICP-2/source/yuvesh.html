@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js"></script>
+
+<html>
+
+<style>
+
+
+    .weatherModule {
+        background: #f2f2f2;
+        height: 150px;
+        width: 250px;
+        border: 1px dashed #ccc;
+        padding: 1em;
+    }
+</style>
+
+<body>
+
+
+<div ng-app="weather" ng-controller="weatherctrl" align="center">
+    <form>
+    <label>StateCode:</label>
+
+    <input type="text" name="statecode" id="statecode" >
+    <br/>
+    <label>City:</label>
+
+    <input type="text" name="City "  title="City" id="city">
+    <br>
+
+    <button id="btn" ng-click="getWeather()"> Show Weather </button>
+    <br/>
+
+    <button type="reset" value="Reset">Reset </button>
+
+
+
+    <br/>
+    <div class="weatherModule">
+        <p class="currentConditions" ng-bind-html-unsafe="currentweather.html"></p>
+        <div class="currentIcon" ng-bind-html-unsafe="currentIcon.html"></div>
+    </div>
+    </form>
+</div>
+</body>
+
+
+
+
+
+<script>
+
+            angular.module('weather', [])
+                .controller('weatherctrl', function($scope, $http) {
+
+                    $scope.getWeather = function() {
+                        var state = document.getElementById('statecode').value;
+                        var city = document.getElementById('city').value;
+                        $http.get('https://api.wunderground.com/api/36b799dc821d5836/conditions/q/'+ state +'/'+ city +'.json').success(function(data) {
+                            console.log(data);
+                            tempf = data.current_observation.temp_f;
+                            icon = data.current_observation.icon_url;
+                            humidity = data.current_observation.relative_humidity;
+                            tempc = data.current_observation.temp_c;
+                            console.log(tempf);
+                            $scope.currentweather = {
+                                html: "Currently " + tempf + " &deg; F /" + tempc +" &deg; C and "  + humidity + "Humidity"
+                            }
+                            $scope.currentIcon = {
+                                html: "<img src='" + icon + "'/>"
+                            }
+
+                        })
+                    }
+
+                });
+
+
+
+</script>
+</html>

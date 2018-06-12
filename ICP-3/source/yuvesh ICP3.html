@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.1/angular.min.js"></script>
+
+<html>
+
+<style>
+    body {
+        background-image: url("https://cdn.images.express.co.uk/img/dynamic/126/590x/secondary/Weight-loss-carbs-diet-987636.jpg");
+        background-repeat: no-repeat;
+    }
+
+    .caloriesModule {
+        background: #f2f2f2;
+        height: 150px;
+        width: 250px;
+        border: 1px dashed#CCCCCC ;
+        padding: 1em;
+    }
+</style>
+
+<body>
+
+
+<div ng-app="food" ng-controller="calories" align="center">
+    <form>
+        <h1> Nutrition Values</h1><br/>
+        <label>food item:</label>
+
+        <input type="text" name="food_item" id="food_item" >
+        <br/><br>
+
+        <button id="btn" ng-click="getCalories()"> calculate Calories  </button>
+        <br/>
+
+        <button type="reset" value="Reset" onclick="javascript:resetValues();">Reset </button>
+
+
+
+        <br/>
+        <div class="caloriesModule">
+            <p class="weightcalories" ng-bind-html-unsafe="Caloriesout.html"></p>
+            <div class="data" ng-bind-html-unsafe="data.html"></div>
+        </div>
+    </form>
+</div>
+</body>
+
+
+
+
+
+<script>
+
+    angular.module('food', [])
+        .controller('calories', function($scope, $http) {
+
+            $scope.getCalories = function() {
+                var item = document.getElementById('food_item').value;
+                $http.get('https://api.edamam.com/api/nutrition-data?app_id=e7a81d86&app_key=6943f92bca6112c727ada2dc40fa66a8&ingr='+ item ).success(function(data) {
+                    console.log(data);
+                    calories =data.calories;
+                    weight = data.totalWeight;
+                    console.log(calories);
+                    $scope.Caloriesout = {
+                        html: "Total Calories ="+ calories + " </br>Total Weight =" + weight
+                    }
+
+
+                    $scope.data = {
+                        html: "<a href=\"https://stream.watsonplatform.net/text-to-speech/api/v1/synthesize?username=5d1cc633-326b-48aa-95fe-4bc3c7cb331e&password=vjZWwBfzI8yR&text="+ " total calories is "+ calories +"and total weight is " + weight+"\" >click here </a>"
+                    }
+
+                })
+            }
+
+        });
+
+
+    function resetValues(){
+        $(".caloriesModule").hide();
+
+    }
+
+
+</script>
+</html>
